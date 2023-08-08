@@ -1,4 +1,4 @@
-![](https://github.com/Wiret02/gitAction_test/actions/workflows/node.js_CI.yml/badge.svg)
+![](https://github.com/Wiret02/dofd-05-node-Wiret02-main/actions/workflows/node.js_CI.yml/badge.svg)
 
 # Description
 This project is the Node.js backend part of an educational  project. It provides connection to DB, implements CRUD operations and sends responses to requests. 
