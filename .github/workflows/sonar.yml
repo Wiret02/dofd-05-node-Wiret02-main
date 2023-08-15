@@ -32,8 +32,7 @@ jobs:
 
       - name: SonarQube Scan
         run: |
-          docker run \
-            --rm \
+          docker run --rm \
             -e SONAR_TOKEN=${{ secrets.SONAR_TOKEN }} \
             -e SONAR_HOST_URL=https:${{ secrets.SONAR_HOST_URL }} \  # Замініть на ваш URL сервера SonarQube
             -v "$(pwd):/usr/src" \
