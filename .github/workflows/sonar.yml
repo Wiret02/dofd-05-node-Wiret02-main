@@ -34,6 +34,6 @@ jobs:
         run: |
           docker run --rm \
             -e SONAR_TOKEN=${{ secrets.SONAR_TOKEN }} \
-            -e SONAR_HOST_URL=https:${{ secrets.SONAR_HOST_URL }} \  # Замініть на ваш URL сервера SonarQube
+            -e SONAR_HOST_URL=https://${{ secrets.SONAR_HOST_URL }} \
             -v "$(pwd):/usr/src" \
             sonarsource/sonar-scanner-cli
