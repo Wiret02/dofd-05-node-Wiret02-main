@@ -1,23 +1,18 @@
-name: Sonar Node.js CI
-
+name: Sonar
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize, reopened]
-
 jobs:
   build:
-    name: Build and Test
+    name: Analysis
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Use Node.js 14
+      
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 14
@@ -27,22 +22,19 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            
-      - name: Install dependencies
-        run: npm i
+          restore-keys: ${{ runner.os }}-node-
 
-      - name: Run tests
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests and coverage
         run: npm test
 
-      # You can add more steps here for your build and testing process
-
-      # If you want to integrate with SonarQube for Node.js, you can add the following step
-      - name: SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: sonar-scanner
-
-      # You can add more steps here if needed
+      - name: SonarQube Scan
+        run: |
+          docker run \
+            --rm \
+            -e SONAR_TOKEN=${{ secrets.SONAR_TOKEN }} \
+            -e SONAR_HOST_URL=https:${{ secrets.SONAR_HOST_URL }} \  # Замініть на ваш URL сервера SonarQube
+            -v "$(pwd):/usr/src" \
+            sonarsource/sonar-scanner-cli
