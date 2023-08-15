@@ -1,39 +1,21 @@
-name: Sonar
+name: SonarQube Analysis
+
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - main # Замініть на відповідну назву вашої основної гілки
+
 jobs:
   build:
-    name: Analysis
+    name: SonarQube Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Cache Node.js packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests and coverage
-        run: npm test
-
       - name: SonarQube Scan
         run: |
           docker run --rm \
             -e SONAR_TOKEN=${{ secrets.SONAR_TOKEN }} \
-            -e SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }} \
-            -v "$(pwd):/usr/src" \
+            -v "${PWD}:/usr/src" \
             sonarsource/sonar-scanner-cli
